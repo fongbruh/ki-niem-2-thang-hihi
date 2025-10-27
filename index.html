@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thư nhỏ gửi Bống <3 ?</title>
+    <title>Kỉ niệm 2 tháng chút nhỉ <3 ?</title>
     <script defer src="https://pyscript.net/latest/pyscript.js"></script>
     <style>
         body {
@@ -11,7 +11,9 @@
             font-family: Arial, sans-serif;
             background-color: #fce4ec;
             position: relative;
+            overflow-x: hidden;
         }
+
         #letter, #second-letter {
             background: white;
             padding: 20px;
@@ -21,7 +23,9 @@
             position: relative;
             top: 20px;
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
         }
+
         #second-letter {
             display: none;
             position: absolute;
@@ -29,34 +33,112 @@
             left: 50%;
             transform: translate(-50%, -50%);
         }
+
         #yes-btn, #no-btn {
             font-size: 20px;
             padding: 10px 20px;
             margin: 20px;
             border: none;
             cursor: pointer;
+            border-radius: 6px;
         }
+
         #yes-btn {
             background-color: lightgreen;
         }
+
         #no-btn {
             background-color: tomato;
             position: absolute;
         }
+
+        /* --- ảnh trang trí hai bên + 1 ảnh ngang --- */
+        .decor-wrap {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .decor {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            object-fit: contain; /* giữ tỉ lệ, không méo ảnh */
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            opacity: 0.95;
+        }
+
+        /* Ảnh trái/phải cân đối */
+        .decor.left {
+            top: 50%;
+            left: 5%;
+            transform: translateY(-50%);
+        }
+
+        .decor.right {
+            top: 50%;
+            right: 5%;
+            transform: translateY(-50%);
+        }
+
+        /* Ảnh ngang dưới giữa */
+        .decor-bottom {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 50px;
+            width: 400px;
+            height: 130px;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            opacity: 0.95;
+        }
+
+        /* đảm bảo nội dung chính nằm trên ảnh */
+        h1, #letter, #second-letter, #yes-btn, #no-btn {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Responsive: hiển thị gọn gàng trên mobile */
+        @media (max-width: 768px) {
+            .decor {
+                width: 120px;
+                height: 120px;
+                opacity: 0.9;
+            }
+            .decor.left {
+                left: 2%;
+            }
+            .decor.right {
+                right: 2%;
+            }
+            .decor-bottom {
+                width: 80vw;
+                height: 100px;
+                bottom: 20px;
+            }
+        }
     </style>
 </head>
 <body>
-    <h1>Kỉ niệm 2 tháng chút nhỉ?</h1>
+    <h1>Bống cho xin cái hẹn đê?</h1>
+
     <div id="letter">
         <p>Gửi Bống,</p>
         <p>2 tháng ngắn nhưng mà đủ để tớ thấy Bống quan trọng với tớ siêu nhiều </p>
-        <p>Tút chỉ muốn nói Tút cảm ơn Bống vì đã ở lại với tớ!! </p>
-        <p> Mình kỉ niệm bằng đứa con nhể????  </p>
-        <p> Tút</p>
+        <p>Tút chỉ muốn nói Tút cảm ơn Bống vì đã ở lại với tớ!!</p>
+        <p>Mình kỉ niệm bằng đứa con nhể????</p>
+        <p>Tút</p>
     </div>
+
     <button id="yes-btn" onclick="showSecondLetter()">YES</button>
     <button id="no-btn" onmouseover="moveNoButton()">NO</button>
-    
+
     <div id="second-letter">
         <p>Bống thối,</p>
         <p>Tút bíc là Bống sẽ chọn có mà >< </p>
@@ -64,7 +146,14 @@
         <p>Tút yêu Bống 🎉</p>
         <button onclick="closeSecondLetter()">OK</button>
     </div>
-    
+
+    <!-- Ảnh trang trí -->
+    <div class="decor-wrap">
+        <img src="/left%20image.JPG" alt="left image" class="decor left">
+        <img src="/right%20image.JPG" alt="right image" class="decor right">
+        <img src="/middle%20imgae.JPG" alt="bottom image" class="decor-bottom">
+    </div>
+
     <script>
         function moveNoButton() {
             let btn = document.getElementById("no-btn");
@@ -73,9 +162,11 @@
             btn.style.left = x + "px";
             btn.style.top = y + "px";
         }
+
         function showSecondLetter() {
             document.getElementById("second-letter").style.display = "block";
         }
+
         function closeSecondLetter() {
             document.getElementById("second-letter").style.display = "none";
         }
