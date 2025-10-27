@@ -14,7 +14,7 @@
             overflow-x: hidden;
         }
 
-        #letter, #second-letter {
+        #letter {
             background: white;
             padding: 20px;
             border: 2px solid black;
@@ -26,12 +26,30 @@
             border-radius: 8px;
         }
 
+        /* ✅ Thư thứ 2 căn giữa tuyệt đối */
         #second-letter {
             display: none;
-            position: absolute;
+            position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            width: 320px;
+            max-width: 90vw;
+            background: white;
+            padding: 20px;
+            border: 2px solid black;
+            border-radius: 8px;
+            box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.3);
+            z-index: 999;
+        }
+
+        /* ✅ Lớp mờ nền cho thư thứ 2 */
+        #overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.25);
+            z-index: 900;
         }
 
         #yes-btn, #no-btn {
@@ -52,7 +70,7 @@
             position: absolute;
         }
 
-        /* --- ảnh trang trí hai bên + 1 ảnh ngang --- */
+        /* --- Ảnh trang trí hai bên + 1 ảnh ngang --- */
         .decor-wrap {
             position: fixed;
             inset: 0;
@@ -63,43 +81,41 @@
 
         .decor {
             position: absolute;
-            width: 200px;
-            height: 200px;
-            object-fit: contain; /* giữ tỉ lệ, không méo ảnh */
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            width: 400px; /* ✅ gấp đôi kích thước cũ */
+            height: 400px;
+            object-fit: contain;
+            border-radius: 20px;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
             opacity: 0.95;
         }
 
-        /* Ảnh trái/phải cân đối */
         .decor.left {
             top: 50%;
-            left: 5%;
+            left: 3%;
             transform: translateY(-50%);
         }
 
         .decor.right {
             top: 50%;
-            right: 5%;
+            right: 3%;
             transform: translateY(-50%);
         }
 
-        /* Ảnh ngang dưới giữa */
         .decor-bottom {
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
             bottom: 50px;
-            width: 400px;
-            height: 130px;
+            width: 800px; /* ✅ gấp đôi kích thước cũ */
+            height: 260px;
             object-fit: contain;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            border-radius: 16px;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
             opacity: 0.95;
         }
 
         /* đảm bảo nội dung chính nằm trên ảnh */
-        h1, #letter, #second-letter, #yes-btn, #no-btn {
+        h1, #letter, #yes-btn, #no-btn {
             position: relative;
             z-index: 2;
         }
@@ -107,19 +123,19 @@
         /* Responsive: hiển thị gọn gàng trên mobile */
         @media (max-width: 768px) {
             .decor {
-                width: 120px;
-                height: 120px;
+                width: 180px;
+                height: 180px;
                 opacity: 0.9;
             }
             .decor.left {
-                left: 2%;
+                left: 1%;
             }
             .decor.right {
-                right: 2%;
+                right: 1%;
             }
             .decor-bottom {
-                width: 80vw;
-                height: 100px;
+                width: 90vw;
+                height: 140px;
                 bottom: 20px;
             }
         }
@@ -139,6 +155,10 @@
     <button id="yes-btn" onclick="showSecondLetter()">YES</button>
     <button id="no-btn" onmouseover="moveNoButton()">NO</button>
 
+    <!-- ✅ Overlay nền mờ -->
+    <div id="overlay"></div>
+
+    <!-- ✅ Thư thứ 2 căn giữa -->
     <div id="second-letter">
         <p>Bống thối,</p>
         <p>Tút bíc là Bống sẽ chọn có mà >< </p>
@@ -147,13 +167,13 @@
         <button onclick="closeSecondLetter()">OK</button>
     </div>
 
-    <!-- Ảnh trang trí -->
+    <!-- ✅ Ảnh trang trí (đã phóng to gấp đôi) -->
     <div class="decor-wrap">
         <img src="left.JPG" alt="left image" class="decor left">
         <img src="right.JPG" alt="right image" class="decor right">
         <img src="middle.JPG" alt="bottom image" class="decor-bottom">
     </div>
-
+    
     <script>
         function moveNoButton() {
             let btn = document.getElementById("no-btn");
@@ -164,13 +184,14 @@
         }
 
         function showSecondLetter() {
+            document.getElementById("overlay").style.display = "block";
             document.getElementById("second-letter").style.display = "block";
         }
 
         function closeSecondLetter() {
+            document.getElementById("overlay").style.display = "none";
             document.getElementById("second-letter").style.display = "none";
         }
     </script>
 </body>
 </html>
-
