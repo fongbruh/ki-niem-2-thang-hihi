@@ -14,7 +14,7 @@
             overflow-x: hidden;
         }
 
-        #letter, #second-letter {
+        #letter {
             background: white;
             padding: 20px;
             border: 2px solid black;
@@ -26,12 +26,48 @@
             border-radius: 8px;
         }
 
+        /* ===== Modal (thư thứ 2) + overlay có hiệu ứng ===== */
         #second-letter {
-            display: none;
-            position: absolute;
+            position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
+            width: 320px;
+            max-width: 90vw;
+            background: #fff;
+            padding: 20px;
+            border: 2px solid #000;
+            border-radius: 8px;
+            box-shadow: 0 6px 16px rgba(0,0,0,.3);
+            transform: translate(-50%, -50%) scale(.95);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            z-index: 999;
+            transition: opacity .25s ease, transform .25s ease, visibility 0s linear .25s;
+        }
+        #second-letter.is-visible{
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            visibility: visible;
+            pointer-events: auto;
+            transition: opacity .25s ease, transform .25s ease;
+        }
+
+        #overlay{
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.25);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            z-index: 900;
+            transition: opacity .25s ease, visibility 0s linear .25s;
+        }
+        #overlay.is-visible{
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transition: opacity .25s ease;
         }
 
         #yes-btn, #no-btn {
@@ -42,17 +78,10 @@
             cursor: pointer;
             border-radius: 6px;
         }
+        #yes-btn { background-color: lightgreen; }
+        #no-btn  { background-color: tomato; position: absolute; }
 
-        #yes-btn {
-            background-color: lightgreen;
-        }
-
-        #no-btn {
-            background-color: tomato;
-            position: absolute;
-        }
-
-        /* --- ảnh trang trí hai bên + 1 ảnh ngang --- */
+        /* ===== Ảnh trang trí (đã phóng to gấp đôi) ===== */
         .decor-wrap {
             position: fixed;
             inset: 0;
@@ -60,68 +89,38 @@
             z-index: 1;
             overflow: hidden;
         }
-
         .decor {
             position: absolute;
-            width: 200px;
-            height: 200px;
-            object-fit: contain; /* giữ tỉ lệ, không méo ảnh */
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-            opacity: 0.95;
+            width: 400px;   /* gấp đôi */
+            height: 400px;  /* gấp đôi */
+            object-fit: contain;   /* giữ tỉ lệ, không méo */
+            border-radius: 20px;
+            box-shadow: 0 6px 14px rgba(0,0,0,.15);
+            opacity: .95;
         }
+        .decor.left  { top: 50%; left: 3%;  transform: translateY(-50%); }
+        .decor.right { top: 50%; right: 3%; transform: translateY(-50%); }
 
-        /* Ảnh trái/phải cân đối */
-        .decor.left {
-            top: 50%;
-            left: 5%;
-            transform: translateY(-50%);
-        }
-
-        .decor.right {
-            top: 50%;
-            right: 5%;
-            transform: translateY(-50%);
-        }
-
-        /* Ảnh ngang dưới giữa */
-        .decor-bottom {
+        .decor-bottom{
             position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
+            left: 50%; transform: translateX(-50%);
             bottom: 50px;
-            width: 400px;
-            height: 130px;
+            width: 800px;   /* gấp đôi */
+            height: 260px;  /* gấp đôi */
             object-fit: contain;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-            opacity: 0.95;
+            border-radius: 16px;
+            box-shadow: 0 6px 14px rgba(0,0,0,.15);
+            opacity: .95;
         }
 
-        /* đảm bảo nội dung chính nằm trên ảnh */
-        h1, #letter, #second-letter, #yes-btn, #no-btn {
-            position: relative;
-            z-index: 2;
-        }
+        /* Nội dung chính nằm trên ảnh */
+        h1, #letter, #yes-btn, #no-btn { position: relative; z-index: 2; }
 
-        /* Responsive: hiển thị gọn gàng trên mobile */
-        @media (max-width: 768px) {
-            .decor {
-                width: 120px;
-                height: 120px;
-                opacity: 0.9;
-            }
-            .decor.left {
-                left: 2%;
-            }
-            .decor.right {
-                right: 2%;
-            }
-            .decor-bottom {
-                width: 80vw;
-                height: 100px;
-                bottom: 20px;
-            }
+        /* Responsive */
+        @media (max-width: 768px){
+            .decor{ width: 180px; height: 180px; }
+            .decor.left{ left: 1%; } .decor.right{ right: 1%; }
+            .decor-bottom{ width: 90vw; height: 140px; bottom: 20px; }
         }
     </style>
 </head>
@@ -139,6 +138,8 @@
     <button id="yes-btn" onclick="showSecondLetter()">YES</button>
     <button id="no-btn" onmouseover="moveNoButton()">NO</button>
 
+    <!-- Overlay + Modal -->
+    <div id="overlay"></div>
     <div id="second-letter">
         <p>Bống thối,</p>
         <p>Tút bíc là Bống sẽ chọn có mà >< </p>
@@ -149,26 +150,27 @@
 
     <!-- Ảnh trang trí -->
     <div class="decor-wrap">
-        <img src="left.JPG" alt="left image" class="decor left">
-        <img src="right.JPG" alt="right image" class="decor right">
+        <img src="left.JPG"   alt="left image"  class="decor left">
+        <img src="right.JPG"  alt="right image" class="decor right">
         <img src="middle.JPG" alt="bottom image" class="decor-bottom">
     </div>
 
     <script>
         function moveNoButton() {
-            let btn = document.getElementById("no-btn");
-            let x = Math.random() * (window.innerWidth - 100);
-            let y = Math.random() * (window.innerHeight - 100);
+            const btn = document.getElementById("no-btn");
+            const x = Math.random() * (window.innerWidth - 100);
+            const y = Math.random() * (window.innerHeight - 100);
             btn.style.left = x + "px";
-            btn.style.top = y + "px";
+            btn.style.top  = y + "px";
         }
 
         function showSecondLetter() {
-            document.getElementById("second-letter").style.display = "block";
+            document.getElementById("overlay").classList.add("is-visible");
+            document.getElementById("second-letter").classList.add("is-visible");
         }
-
         function closeSecondLetter() {
-            document.getElementById("second-letter").style.display = "none";
+            document.getElementById("second-letter").classList.remove("is-visible");
+            document.getElementById("overlay").classList.remove("is-visible");
         }
     </script>
 </body>
